@@ -15,7 +15,7 @@ const jwt = require('jsonwebtoken')
 
 class AuthenticationController implements Controller {
 
-    public path = '/auth';
+    public path = '/api/auth';
     public router = express.Router();
     private user = UserModel;
 
