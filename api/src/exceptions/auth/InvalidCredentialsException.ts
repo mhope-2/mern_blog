@@ -1,9 +1,9 @@
 import HttpException from '../http/HttpException';
 
-class WrongCredentialsException extends HttpException {
+class InvalidCredentialsException extends HttpException {
   constructor() {
     super(401, 'Wrong credentials provided');
   }
 }
 
-export default WrongCredentialsException;
+export default InvalidCredentialsException;

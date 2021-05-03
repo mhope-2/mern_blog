@@ -2,10 +2,11 @@ import * as bcrypt from 'bcrypt';
 import * as express from 'express';
 // const bcrypt = require('bcrypt')
 import UserWithThatEmailAlreadyExistsException from '../exceptions/auth/UserWithThatEmailAlreadyExistsException';
-import WrongCredentialsException from '../exceptions/auth/WrongCredentialsException'
+import InvalidCredentialsException from '../exceptions/auth/InvalidCredentialsException'
 import PasswordMismatchException from '../exceptions/auth/PasswordMismatchException'
 import InvalidPasswordLengthException from '../exceptions/auth/InvalidPasswordLengthException'
 
+import UserWithThatUsernameAlreadyExistsException from '../exceptions/auth/UserWithThatUsernameAlreadyExistsException'
 import Controller from '../interfaces/controller.interface';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreateUserDto from '../user/user.dto';
@@ -49,16 +50,24 @@ class AuthenticationController implements Controller {
         
         if (passwordsMatch) {
             res.json({"Response":`${req.body.password} registered successfully`});
-          } 
-        else if(userData.password.length < 6){
-            next(new InvalidPasswordLengthException())
-        }
-        else {
-          if (
-            await this.user.findOne({ email: userData.email })
-          ) {
-            next(new UserWithThatEmailAlreadyExistsException(userData.email));
-          } else {
+
+            if(userData.password.length < 6){
+              next(new InvalidPasswordLengthException())
+            }
+
+            if(req.body.password != req.body.password2){
+              next(new PasswordMismatchException())
+            }
+
+            if ( await this.user.findOne({ email: userData.email }) ) {
+              next(new UserWithThatEmailAlreadyExistsException(userData.email));
+            } 
+
+            if ( await this.user.findOne({ username: userData.username }) ) {
+              next(new UserWithThatUsernameAlreadyExistsException(userData.username));
+            } 
+
+            // create user
             const hashedPassword = await bcrypt.hash(userData.password, 10);
             const user = await this.user.create({
               ...userData,
@@ -68,8 +77,9 @@ class AuthenticationController implements Controller {
             const tokenData = this.createToken(user);
             res.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
             res.json({"Response":`User with username ${user.username} created successfully`});
-        }
-      }
+
+
+          }                        
       }
 
 
@@ -83,10 +93,10 @@ class AuthenticationController implements Controller {
             user.password = '';
             res.json({"Response":"User authenticated successfully"});
           } else {
-            next(new WrongCredentialsException())
+            next(new InvalidCredentialsException())
           }
         } else {
-          next(new WrongCredentialsException());
+          next(new InvalidCredentialsException());
         }
       }
 
@@ -110,7 +120,6 @@ class AuthenticationController implements Controller {
           token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
         };
       }
-    
     
 
 }    
