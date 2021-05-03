@@ -3,6 +3,9 @@ import * as express from 'express';
 // const bcrypt = require('bcrypt')
 import UserWithThatEmailAlreadyExistsException from '../exceptions/auth/UserWithThatEmailAlreadyExistsException';
 import WrongCredentialsException from '../exceptions/auth/WrongCredentialsException'
+import PasswordMismatchException from '../exceptions/auth/PasswordMismatchException'
+import InvalidPasswordLengthException from '../exceptions/auth/InvalidPasswordLengthException'
+
 import Controller from '../interfaces/controller.interface';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreateUserDto from '../user/user.dto';
@@ -41,11 +44,14 @@ class AuthenticationController implements Controller {
     // registration middleware
     private registration = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
         const userData: CreateUserDto = req.body;
-        if(userData.password !== userData.password2){
-          res.json({"Response":"Passwords do not match"})
-        } 
+        
+        const passwordsMatch = await bcrypt.compare(req.body.password, req.body.password2)
+        
+        if (passwordsMatch) {
+            res.json({"Response":`${req.body.password} registered successfully`});
+          } 
         else if(userData.password.length < 6){
-          res.json({"Response":"Password length should be 6 characters or more"})
+            next(new InvalidPasswordLengthException())
         }
         else {
           if (
@@ -72,12 +78,12 @@ class AuthenticationController implements Controller {
         const logInData: LogInDto = req.body;
         const user = await this.user.findOne({ username: logInData.username });
         if (user) {
-          const isPasswordMatching = await bcrypt.compare(logInData.password, user.password);
+          const isPasswordMatching = await bcrypt.compare(logInData.password, user.password)
           if (isPasswordMatching) {
             user.password = '';
             res.json({"Response":"User authenticated successfully"});
           } else {
-            next(new WrongCredentialsException());
+            next(new WrongCredentialsException())
           }
         } else {
           next(new WrongCredentialsException());
