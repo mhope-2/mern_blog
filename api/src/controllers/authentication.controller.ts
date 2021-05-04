@@ -49,7 +49,6 @@ class AuthenticationController implements Controller {
         const passwordsMatch = await bcrypt.compare(req.body.password, req.body.password2)
         
         if (passwordsMatch) {
-            res.json({"Response":`${req.body.password} registered successfully`});
 
             if(userData.password.length < 6){
               next(new InvalidPasswordLengthException())
@@ -75,12 +74,15 @@ class AuthenticationController implements Controller {
             });
             user.password = '';
             const tokenData = this.createToken(user);
-            res.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
-            res.json({"Response":`User with username ${user.username} created successfully`});
+            res.setHeader('Set-Cookie', [this.createCookie(tokenData)])
+            res.json({"Response":`User with username ${user.username} created successfully`})
 
 
-          }                        
-      }
+          }  
+          else {
+            next(new PasswordMismatchException())
+          }                      
+      } 
 
 
       // login middleware
