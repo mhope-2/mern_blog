@@ -1,9 +1,8 @@
 // import * as bodyParser from 'body-parser';
-import express from 'express';
+import express from 'express'
 import session from 'express-session'
-import Controller from './interfaces/controller.interface';
-import errorMiddleware from './middleware/error.middleware';
-
+import Controller from './interfaces/controller.interface'
+import errorMiddleware from './middleware/error.middleware'
 const cookieParser = require('cookie-parser')  
 const mongoose = require('mongoose')
 const cors = require('cors')
@@ -46,12 +45,14 @@ class App {
     this.app.use(errorMiddleware);
   }
 
+  // initialize controllers
   private initializeControllers(controllers: Controller[]) {
     controllers.forEach((controller) => {
       this.app.use('/', controller.router);
     });
   }
-  
+
+    
   // connect to database
   private connectDB = async ()=>{
     const connect = await mongoose.connect(process.env.ATLAS_URI,{

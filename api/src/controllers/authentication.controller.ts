@@ -5,7 +5,7 @@ import UserWithThatEmailAlreadyExistsException from '../exceptions/auth/UserWith
 import InvalidCredentialsException from '../exceptions/auth/InvalidCredentialsException'
 import PasswordMismatchException from '../exceptions/auth/PasswordMismatchException'
 import InvalidPasswordLengthException from '../exceptions/auth/InvalidPasswordLengthException'
-
+import UserNotFoundException from '../exceptions/auth/UserNotFoundException'
 import UserWithThatUsernameAlreadyExistsException from '../exceptions/auth/UserWithThatUsernameAlreadyExistsException'
 import Controller from '../interfaces/controller.interface';
 import validationMiddleware from '../middleware/validation.middleware';
@@ -30,6 +30,7 @@ class AuthenticationController implements Controller {
     private initializeRoutes() {
 
         this.router.get(`${this.path}/users`, this.userList);
+        this.router.get(`${this.path}/:id`, this.findUserById);
         this.router.post(`${this.path}/register`, validationMiddleware(CreateUserDto), this.registration);
         this.router.post(`${this.path}/login`, validationMiddleware(LogInDto), this.loggingIn);
       }
@@ -41,6 +42,19 @@ class AuthenticationController implements Controller {
           .then(users => res.json(users))
           .catch(err => res.status(400).json('Error: ' + err))
     } 
+
+    // Get Exercise Info by Id
+  private findUserById = async (req:express.Request, res:express.Response, next:express.NextFunction) => {
+
+    this.user.findById(req.params.id)
+    .then(user => {
+      if (user)
+        res.json(user)
+      else {
+        next(new UserNotFoundException(404));
+      }
+    })
+  }
 
     // registration middleware
     private registration = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
