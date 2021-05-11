@@ -1,5 +1,6 @@
 import *  as dotenv from 'dotenv'
 import validateEnv from './utils/validateEnv'
+import PostController from './controllers/post.controller'
 import AuthenticationController from './controllers/authentication.controller'
 const multer = require("multer")
 const path = require("path")
@@ -17,7 +18,8 @@ validateEnv();
 // instantiate app class
 const app = new App(
   [
-    new AuthenticationController()
+    new AuthenticationController(),
+    new PostController()
   ],
 );
 
