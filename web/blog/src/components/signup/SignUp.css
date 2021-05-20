@@ -1,0 +1,71 @@
+
+.signup-card {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.signup-btn {
+    position: relative;
+    margin-left: 180px;
+    margin-bottom: 30px;
+
+}
+
+.signup-card-title {
+    font-size:large;
+    text-align: center;
+}
+
+.username {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+
+.fname {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+
+.lname {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.email {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.password {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.password2 {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.errorBtn {
+    width: 290px;
+    padding-top: 20px;
+    position: relative;
+    margin-left: 75px;
+    text-align: center;
+    display: inline;
+}

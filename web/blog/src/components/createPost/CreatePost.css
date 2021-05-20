@@ -1,0 +1,42 @@
+.signup-card {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.signup-btn {
+    position: relative;
+    margin-left: 180px;
+    margin-bottom: 30px;
+
+}
+
+.signup-card-title {
+    font-size:large;
+    text-align: center;
+}
+
+.post-image {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.post-title {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.post-body {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#post-imagelabel {
+    font-size: 15px;
+}
