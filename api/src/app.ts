@@ -32,6 +32,7 @@ class App {
     this.app.use(cors())
     this.app.use(express.json())
     this.app.use(cookieParser())
+    this.app.use(express.static('public/post_images'))
     this.app.use(session({
         secret: 'keyboard cat',
         resave: false,
